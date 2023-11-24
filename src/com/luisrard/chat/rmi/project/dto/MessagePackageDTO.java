@@ -1,26 +1,22 @@
 package com.luisrard.chat.rmi.project.dto;
 
-public class MessagePackageDTO {
-    private final MessageDTO message;
-    private final ConnectionDTO from;
-    private final ConnectionDTO to;
+import java.io.Serializable;
 
-    public MessagePackageDTO(MessageDTO message, ConnectionDTO from, ConnectionDTO to) {
+public class MessagePackageDTO implements Serializable {
+    private final String message;
+    private final String from;
+
+    public MessagePackageDTO(String message, String from) {
         this.message = message;
         this.from = from;
-        this.to = to;
     }
 
-    public MessageDTO getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public ConnectionDTO getFrom() {
+    public String getFrom() {
         return from;
-    }
-
-    public ConnectionDTO getTo() {
-        return to;
     }
 
     @Override
@@ -28,7 +24,6 @@ public class MessagePackageDTO {
         return "MessagePackage{" +
                 "message: " + message +
                 ", from: " + from +
-                ", to: " + to +
                 '}';
     }
 }

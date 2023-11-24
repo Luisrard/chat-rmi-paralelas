@@ -1,6 +1,8 @@
 package com.luisrard.chat.rmi.project.dto;
 
-public class ConnectionDTO {
+import java.io.Serializable;
+
+public class ConnectionDTO implements Serializable {
     private final String ip;
     private final String userName;
 

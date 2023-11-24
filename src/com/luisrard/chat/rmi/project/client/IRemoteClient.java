@@ -7,6 +7,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IRemoteClient extends Remote {
-    void receiveMessage(MessagePackageDTO messageDTO) throws RemoteException;
+    void receiveMessage(MessagePackageDTO message) throws RemoteException;
     void receiveNewConnection(ConnectionDTO connectionDTO) throws RemoteException;
 }

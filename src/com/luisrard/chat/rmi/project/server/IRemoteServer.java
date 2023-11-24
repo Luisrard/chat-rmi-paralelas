@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface IRemoteServer extends Remote {
     List<ConnectionDTO> connectToServer(ConnectionDTO connectionDTO) throws RemoteException;
-    String sendMessage(MessagePackageDTO message) throws RemoteException;
 }

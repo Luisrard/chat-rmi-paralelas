@@ -1,44 +1,29 @@
 package com.luisrard.chat.rmi.project.client;
 
 import com.luisrard.chat.rmi.project.dto.ConnectionDTO;
-import com.luisrard.chat.rmi.project.dto.MessageDTO;
 import com.luisrard.chat.rmi.project.dto.MessagePackageDTO;
+import com.luisrard.chat.rmi.project.utils.IFunction;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 public class RemoteClientImpl  extends UnicastRemoteObject implements IRemoteClient {
-    private final HashMap<String, List<MessageDTO>> messages;
-    private final HashSet<ConnectionDTO> connections;
-
-
-    protected RemoteClientImpl() throws RemoteException {
-        messages = new HashMap<>();
-        connections = new HashSet<>();
+    private final IFunction<MessagePackageDTO> onMessageReceived;
+    private final IFunction<ConnectionDTO> onNewConnectionReceived;
+    protected RemoteClientImpl(IFunction<MessagePackageDTO> onMessageReceived,
+                               IFunction<ConnectionDTO> onNewConnectionReceived)
+            throws RemoteException {
+        this.onMessageReceived = onMessageReceived;
+        this.onNewConnectionReceived = onNewConnectionReceived;
     }
 
     @Override
-    public void receiveMessage(MessagePackageDTO messageDTO) throws RemoteException {
-        System.out.println("Message " + messageDTO);
-        ConnectionDTO from = messageDTO.getFrom();
-        messages.compute(from.getUserName(), (name, messages) -> {
-            if(messages == null){
-                messages = new ArrayList<>();
-            }
-            else{
-                messages.add(messageDTO.getMessage());
-            }
-            return messages;
-        });
+    public void receiveMessage(MessagePackageDTO messagePackageDTO) throws RemoteException {
+        onMessageReceived.apply(messagePackageDTO);
     }
 
     @Override
     public void receiveNewConnection(ConnectionDTO connectionDTO) throws RemoteException {
-        System.out.println("User " + connectionDTO + " is online");
-        connections.add(connectionDTO);
+        onNewConnectionReceived.apply(connectionDTO);
     }
 }

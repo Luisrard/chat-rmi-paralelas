@@ -1,32 +1,34 @@
 package com.luisrard.chat.rmi.project.client;
 
 import com.luisrard.chat.rmi.project.dto.ConnectionDTO;
+import com.luisrard.chat.rmi.project.view.ChatView;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+
+import static com.luisrard.chat.rmi.project.utils.Util.generateURLConnection;
 
 public class Client {
-
-    public static final int CLIENT_PORT = 9020;
-    public static final String CONNECTION_CLIENT = ":" + CLIENT_PORT  + "/clientChat";
+    public static final String CONNECTION_CLIENT =  "/clientChat";
 
     public static void main(String[] args) {
         String ip = args[0];
         String userName = args[1];
 
         try {
+            int port = Integer.parseInt(ip.split(":")[1]);
+            LocateRegistry.createRegistry(port);
 
-            Registry registry = LocateRegistry.createRegistry(CLIENT_PORT);
+            ChatView chatView = new ChatView(new ConnectionDTO(ip, userName));
 
-            IRemoteClient remoteClass = new RemoteClientImpl();
+            IRemoteClient remoteClass = new RemoteClientImpl(
+                    chatView::receiveMessage,
+                    chatView::addUser
+            );
 
-            new ClientChat(new ConnectionDTO(ip, userName)).run();
+            Naming.rebind(generateURLConnection(ip), remoteClass);
 
-            Naming.rebind("//" + ip +  CONNECTION_CLIENT,
-                    remoteClass);
-
-            System.out.println("Client running on port: " + CLIENT_PORT);
+            System.out.println("Client " + userName + " running on " + ip);
         } catch (Exception e) {
             System.out.println(e);
         }
