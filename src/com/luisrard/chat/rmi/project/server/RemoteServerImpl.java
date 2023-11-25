@@ -31,7 +31,7 @@ public class RemoteServerImpl extends UnicastRemoteObject implements IRemoteServ
         for(final ConnectionDTO connection : connections){
             executor.execute(() -> {
                 try{
-                    IRemoteClient client = (IRemoteClient) Naming.lookup(generateURLConnection(connection.getIp()));
+                    IRemoteClient client = connection.getRemoteClient();
                     System.out.println("Sending " + connectionDTO + ", to: " + connection);
                     client.receiveNewConnection(connectionDTO);
                     System.out.println(connectionDTO + " sent to: " + connection);
@@ -49,7 +49,7 @@ public class RemoteServerImpl extends UnicastRemoteObject implements IRemoteServ
         }
 
         connections.add(connectionDTO);
-        System.out.println("Connection "+ connectionDTO+" added in list");
+        System.out.println("Connection "+ connectionDTO+ " added in list");
         return connections;
     }
 

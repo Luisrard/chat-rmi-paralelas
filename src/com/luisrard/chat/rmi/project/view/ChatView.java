@@ -13,12 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static com.luisrard.chat.rmi.project.utils.Util.generateURLConnection;
-
 public class ChatView extends JFrame {
     private final ConnectionDTO localConnection;
     private final HashMap<String, List<String>> conversations;
-    private final HashMap<String, String> iptables;
+    private final HashMap<String, ConnectionDTO> connections;
     private JButton conversationActiveButton;
     private JPanel mainPanel;
     private JPanel header;
@@ -27,7 +25,7 @@ public class ChatView extends JFrame {
     private JPanel logPanel;
     private JLabel logLabel;
     private JPanel createdThreads;
-    private JLabel threadsCreatedLabel;
+    private JLabel userLabel;
     private JTextArea chatText;
     private JButton sendButton;
     private JTextField messageField;
@@ -37,26 +35,32 @@ public class ChatView extends JFrame {
     private JButton stopButton;
 
     public ChatView(ConnectionDTO localConnection){
-        setContentPane(mainPanel);
-        setTitle("FACENOTEBOOK");
-
-        setSize(1000, 800);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
+        this.localConnection = localConnection;
+        initGUI();
 
         conversations = new HashMap<>();
-        iptables = new HashMap<>();
-        this.localConnection = localConnection;
+        connections = new HashMap<>();
 
         componentsHolder.setBounds(20, 0, 81, 140);
         componentsHolder.setLayout(new BoxLayout(componentsHolder, BoxLayout.Y_AXIS));
 
         sendButton.addActionListener(e -> sendMessage());
 
-        connectToServer();
     }
 
-    private void connectToServer(){
+    private void initGUI(){
+        setContentPane(mainPanel);
+        setTitle("FACENOTEBOOK");
+
+        setSize(1000, 800);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        userLabel.setText("User: " + localConnection.getUserName());
+
+        setVisible(true);
+    }
+
+    public void connectToServer(){
         new Thread(() -> {
             try {
                 IRemoteServer remote = (IRemoteServer) Naming.lookup(Server.CONNECTION_NAME);
@@ -71,13 +75,14 @@ public class ChatView extends JFrame {
     }
 
     public void addUser(ConnectionDTO connectionDTO){
-        String name = connectionDTO.getUserName();
-        String ip = connectionDTO.getIp();
-        JButton newUserButton = new JButton(name);
-        newUserButton.addActionListener(e -> loadUserFriendChat(name, newUserButton));
-        componentsHolder.add(newUserButton);
-        conversations.put(name, new ArrayList<>());
-        iptables.put(name, ip);
+        if(!Objects.equals(connectionDTO.getUserName(), localConnection.getUserName())) {
+            String name = connectionDTO.getUserName();
+            JButton newUserButton = new JButton(name);
+            newUserButton.addActionListener(e -> loadUserFriendChat(name, newUserButton));
+            componentsHolder.add(newUserButton);
+            conversations.put(name, new ArrayList<>());
+            connections.put(name, connectionDTO);
+        }
     }
 
     private void loadUserFriendChat(String name, JButton button){
@@ -98,6 +103,7 @@ public class ChatView extends JFrame {
         String messageFormatted = "\n" + user + ": " + message;
         conversations.get(userConversation).add(messageFormatted);
         chatText.append(messageFormatted);
+        System.out.println("adding message in gui");
     }
 
     private void sendMessage(){
@@ -112,8 +118,7 @@ public class ChatView extends JFrame {
 
     private void sendMessageToUser(String userConversation, String message){
         try {
-            IRemoteClient remote = (IRemoteClient) Naming.lookup(
-                    generateURLConnection(iptables.get(userConversation)));
+            IRemoteClient remote = connections.get(userConversation).getRemoteClient();
             remote.receiveMessage(new MessagePackageDTO(localConnection.getUserName(), message));
             logInfo("Message sent to " + userConversation);
         } catch (Exception e) {
@@ -123,6 +128,7 @@ public class ChatView extends JFrame {
     }
 
     public void receiveMessage(MessagePackageDTO messagePackageDTO){
+        System.out.println("Receiving message " + messagePackageDTO);
         String from = messagePackageDTO.getFrom();
         if(conversationActiveButton != null && Objects.equals(conversationActiveButton.getText(), from)){
             addText(from, from, messagePackageDTO.getMessage());
@@ -130,6 +136,7 @@ public class ChatView extends JFrame {
 
         conversations.get(from)
                 .add(messagePackageDTO.getMessage());
+        System.out.println("message added in conversation");
     }
 
     private void logInfo(String logMessage){

@@ -3,6 +3,7 @@ package com.luisrard.chat.rmi.project.dto;
 import java.io.Serializable;
 
 public class MessagePackageDTO implements Serializable {
+    private static final long serialVersionUID = 1;
     private final String message;
     private final String from;
 

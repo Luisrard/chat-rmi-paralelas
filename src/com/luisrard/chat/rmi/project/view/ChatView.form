@@ -70,10 +70,10 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="a8e5c" class="javax.swing.JLabel" binding="threadsCreatedLabel">
+                          <component id="a8e5c" class="javax.swing.JLabel" binding="userLabel">
                             <constraints border-constraint="Center"/>
                             <properties>
-                              <text value="User: Luis"/>
+                              <text value="User: "/>
                             </properties>
                           </component>
                           <component id="48930" class="javax.swing.JLabel">
@@ -111,7 +111,7 @@
                         <properties>
                           <editable value="false"/>
                           <enabled value="true"/>
-                          <text value="luis: 2012&#10;alberto: Hola we"/>
+                          <text value=""/>
                         </properties>
                       </component>
                       <grid id="b981e" layout-manager="BorderLayout" hgap="0" vgap="0">
