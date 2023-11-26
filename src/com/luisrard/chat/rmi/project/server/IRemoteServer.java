@@ -1,12 +1,14 @@
 package com.luisrard.chat.rmi.project.server;
 
-import com.luisrard.chat.rmi.project.dto.ConnectionDTO;
-import com.luisrard.chat.rmi.project.dto.MessagePackageDTO;
+import com.luisrard.chat.rmi.project.model.dto.ConnectionDTO;
+import com.luisrard.chat.rmi.project.model.dto.MessagePackageDTO;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.Set;
 
 public interface IRemoteServer extends Remote {
-    List<ConnectionDTO> connectToServer(ConnectionDTO connectionDTO) throws RemoteException;
+    Set<ConnectionDTO> connectToServer(ConnectionDTO connectionDTO) throws RemoteException;
+
+    void broadcastMessage(MessagePackageDTO messagePackageDTO) throws RemoteException;
 }

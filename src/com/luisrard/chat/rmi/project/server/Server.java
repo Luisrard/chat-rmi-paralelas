@@ -5,7 +5,7 @@ import java.rmi.registry.LocateRegistry;
 
 public class Server {
     public static final int SERVER_PORT = 9010;
-    public static final String CONNECTION_NAME = "//127.0.0.1:" + SERVER_PORT + "/chatServer";
+    public static final String CONNECTION_NAME = "//192.168.0.200:" + SERVER_PORT + "/chatServer";
 
     public static void main(String[] args) {
         try {
@@ -18,7 +18,7 @@ public class Server {
 
             System.out.println("Server running on port: " + SERVER_PORT);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }

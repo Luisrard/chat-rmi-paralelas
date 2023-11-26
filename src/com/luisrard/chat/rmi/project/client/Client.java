@@ -1,6 +1,6 @@
 package com.luisrard.chat.rmi.project.client;
 
-import com.luisrard.chat.rmi.project.dto.ConnectionDTO;
+import com.luisrard.chat.rmi.project.model.dto.ConnectionDTO;
 import com.luisrard.chat.rmi.project.view.ChatView;
 
 public class Client {
@@ -20,7 +20,7 @@ public class Client {
             chatView.connectToServer();
             System.out.println("Client " + userName + " running");
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }

@@ -1,7 +1,7 @@
 package com.luisrard.chat.rmi.project.client;
 
-import com.luisrard.chat.rmi.project.dto.ConnectionDTO;
-import com.luisrard.chat.rmi.project.dto.MessagePackageDTO;
+import com.luisrard.chat.rmi.project.model.dto.ConnectionDTO;
+import com.luisrard.chat.rmi.project.model.dto.MessagePackageDTO;
 import com.luisrard.chat.rmi.project.utils.IFunction;
 
 import java.rmi.RemoteException;
@@ -23,7 +23,7 @@ public class RemoteClientImpl  extends UnicastRemoteObject implements IRemoteCli
     }
 
     @Override
-    public void receiveNewConnection(ConnectionDTO connectionDTO) throws RemoteException {
+    public void receiveConnection(ConnectionDTO connectionDTO) throws RemoteException {
         onNewConnectionReceived.apply(connectionDTO);
     }
 }
