@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class MessagePackageDTO implements Serializable {
     private static final long serialVersionUID = 1;
-    private final String message;
     private final String from;
+    private final String message;
 
-    public MessagePackageDTO(String message, String from) {
-        this.message = message;
+    public MessagePackageDTO(String from, String message) {
         this.from = from;
+        this.message = message;
     }
 
     public String getMessage() {
