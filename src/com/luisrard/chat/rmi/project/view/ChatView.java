@@ -96,7 +96,7 @@ public class ChatView extends JFrame {
                     remoteServer.connectToServer(localConnection);
                 } catch (RemoteException ex) {
                     System.out.println("Error disconnecting");
-                    System.out.println(ex);;
+                    ex.printStackTrace();
                 }
                 System.exit(0);
             }
