@@ -230,15 +230,19 @@ public class ChatView extends JFrame {
         if(!Objects.equals(connectionDTO.getUserName(), localConnection.getUserName())) {
             String name = connectionDTO.getUserName();
             if (connectionDTO.isConnected()) {
+                JButton userButton;
                 if (!connections.containsKey(name)){
-                    JButton newUserButton = new JButton(name);
-                    changeConnectionStatus(ConnectionStatus.ONLINE, newUserButton);
-                    newUserButton.addActionListener(e -> loadUserFriendChat(name, newUserButton));
-                    componentsHolder.add(newUserButton);
-                    buttons.put(name, newUserButton);
+                    userButton = new JButton(name);
+                    userButton.addActionListener(e -> loadUserFriendChat(name, userButton));
+                    componentsHolder.add(userButton);
+                    buttons.put(name, userButton);
                     //Update GUI
                     setVisible(true);
+                } else{
+                    userButton = buttons.get(name);
                 }
+
+                changeConnectionStatus(ConnectionStatus.ONLINE, userButton);
 
                 conversations.put(name, new ArrayList<>());
                 connections.put(name, connectionDTO);
