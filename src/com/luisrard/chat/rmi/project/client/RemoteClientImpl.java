@@ -2,16 +2,16 @@ package com.luisrard.chat.rmi.project.client;
 
 import com.luisrard.chat.rmi.project.model.dto.ConnectionDTO;
 import com.luisrard.chat.rmi.project.model.dto.MessagePackageDTO;
-import com.luisrard.chat.rmi.project.utils.IFunction;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.function.Consumer;
 
 public class RemoteClientImpl  extends UnicastRemoteObject implements IRemoteClient {
-    private final IFunction<MessagePackageDTO> onMessageReceived;
-    private final IFunction<ConnectionDTO> onNewConnectionReceived;
-    protected RemoteClientImpl(IFunction<MessagePackageDTO> onMessageReceived,
-                               IFunction<ConnectionDTO> onNewConnectionReceived)
+    private final Consumer<MessagePackageDTO> onMessageReceived;
+    private final Consumer<ConnectionDTO> onNewConnectionReceived;
+    protected RemoteClientImpl(Consumer<MessagePackageDTO> onMessageReceived,
+                               Consumer<ConnectionDTO> onNewConnectionReceived)
             throws RemoteException {
         this.onMessageReceived = onMessageReceived;
         this.onNewConnectionReceived = onNewConnectionReceived;
@@ -19,11 +19,11 @@ public class RemoteClientImpl  extends UnicastRemoteObject implements IRemoteCli
 
     @Override
     public void receiveMessage(MessagePackageDTO messagePackageDTO) throws RemoteException {
-        onMessageReceived.apply(messagePackageDTO);
+        onMessageReceived.accept(messagePackageDTO);
     }
 
     @Override
     public void receiveConnection(ConnectionDTO connectionDTO) throws RemoteException {
-        onNewConnectionReceived.apply(connectionDTO);
+        onNewConnectionReceived.accept(connectionDTO);
     }
 }
