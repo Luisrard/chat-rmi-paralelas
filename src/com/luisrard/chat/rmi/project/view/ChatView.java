@@ -203,8 +203,8 @@ public class ChatView extends JFrame {
             remote.receiveMessage(new MessagePackageDTO(localConnection.getUserName(), message, false));
             logInfo("Message sent to " + userConversation);
         } catch (Exception e) {
-            System.out.println(e);
             logInfo("Error sending message to " + userConversation);
+            e.printStackTrace();
         }
     }
 
@@ -214,8 +214,8 @@ public class ChatView extends JFrame {
             remoteServer.broadcastMessage(new MessagePackageDTO(localConnection.getUserName(), message, true));
             logInfo("Broadcast sent");
         } catch (Exception e) {
-            System.out.println(e);
             logInfo("Error sending broadcast " + message);
+            e.printStackTrace();
         }
     }
     public void receiveMessage(MessagePackageDTO messagePackageDTO){
